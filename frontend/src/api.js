@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://placement-project-g1kt.onrender.com/"
+  baseURL: "https://placement-project-g1kt.onrender.com"
 });
 
 // token auto attach
