@@ -16,7 +16,7 @@ export default function Profile() {
   const [form, setForm] = useState({});
   const [resumeFile, setResumeFile] = useState(null);
 
-  
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -64,7 +64,7 @@ export default function Profile() {
   return (
     <Layout role="student">
 
-    
+
       <Box mb={4}>
         <Typography variant="h4" fontWeight="bold">
           {form.name || "My Profile"}
@@ -87,7 +87,7 @@ export default function Profile() {
 
           <Divider sx={{ my: 4 }} />
 
-        
+
           <Typography variant="h6" fontWeight="bold" mb={2}>
             Academic Details
           </Typography>
@@ -115,7 +115,7 @@ export default function Profile() {
 
           <Divider sx={{ my: 4 }} />
 
-         
+
           <Typography variant="h6" fontWeight="bold" mb={2}>
             Professional Links
           </Typography>
@@ -137,17 +137,17 @@ export default function Profile() {
 
           <Divider sx={{ my: 4 }} />
 
-        
+
           <Typography variant="h6" fontWeight="bold" mb={2}>
             Resume
           </Typography>
 
-        
+
           {form.resume_url && (
             <Typography mb={2}>
               📄 Current Resume:{" "}
               <a
-                href={`http://localhost:5000${form.resume_url}`}
+                href={`https://placement-project-g1kt.onrender.com${form.resume_url}`}
                 target="_blank"
                 rel="noreferrer"
               >
@@ -156,7 +156,7 @@ export default function Profile() {
             </Typography>
           )}
 
-        
+
           <Typography mb={1}>
             Upload / Update Resume
           </Typography>
@@ -164,9 +164,17 @@ export default function Profile() {
           <input
             type="file"
             accept=".pdf"
-            onChange={(e) => setResumeFile(e.target.files[0])}
-          />
+            onChange={(e) => {
+              const file = e.target.files[0];
 
+              if (file && file.type !== "application/pdf") {
+                alert("Only PDF allowed ❗");
+                return;
+              }
+
+              setResumeFile(file);
+            }}
+          />
           <Box mt={3}>
             <Button sx={btnStyle} onClick={handleSave}>
               Save Profile

@@ -1,9 +1,11 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from "./routes/authRoutes.js"; 
+import fs from "fs";
+import path from "path";
+
+import authRoutes from "./routes/authRoutes.js";
 import authMiddleware from "./middleware/authMiddleware.js";
 import adminMiddleware from "./middleware/adminMiddleware.js";
 import companyRoutes from "./routes/companyRoutes.js";
@@ -16,34 +18,43 @@ dotenv.config();
 
 const app = express();
 
+
 app.use(cors({
-   origin: "*"
+  origin: "*"
 }));
+
 app.use(express.json());
-app.use("/api/company", companyRoutes);
+
+const uploadPath = "uploads";
+if (!fs.existsSync(uploadPath)) {
+  fs.mkdirSync(uploadPath);
+}
+
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 
 app.use("/api/auth", authRoutes);
+app.use("/api/company", companyRoutes);
 app.use("/api/application", applicationRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/notification", notificationRoutes);
-app.use("/uploads", express.static("uploads"));
 app.use("/api/query", queryRoutes);
+
+
 app.get("/api/protected", authMiddleware, (req, res) => {
   res.json({
     message: "You accessed protected route 🎉",
     user: req.user
   });
 });
-app.get(
-  "/api/admin",
-  authMiddleware,
-  adminMiddleware,
-  (req, res) => {
-    res.json({
-      message: "Welcome Admin 👑"
-    });
-  }
-);
+
+app.get("/api/admin", authMiddleware, adminMiddleware, (req, res) => {
+  res.json({
+    message: "Welcome Admin 👑"
+  });
+});
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
@@ -52,6 +63,7 @@ mongoose.connect(process.env.MONGO_URI)
 app.get("/", (req, res) => {
   res.send("API Running...");
 });
+
 
 const PORT = process.env.PORT || 5000;
 

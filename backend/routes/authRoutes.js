@@ -15,11 +15,12 @@ const storage = multer.diskStorage({
     cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, req.user?.id + "-" + Date.now() + ".pdf");
+    cb(null, Date.now() + "-" + file.originalname); 
   }
 });
 
 const upload = multer({ storage });
+
 
 router.get("/profile", authMiddleware, async (req, res) => {
   try {
@@ -30,6 +31,7 @@ router.get("/profile", authMiddleware, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 router.post("/register", async (req, res) => {
   try {
@@ -60,6 +62,8 @@ router.post("/register", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -99,6 +103,8 @@ router.post("/login", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+
 router.post("/google-login", async (req, res) => {
   try {
     const { email } = req.body;
@@ -121,21 +127,23 @@ router.post("/google-login", async (req, res) => {
     res.json({ token, user: safeUser });
 
   } catch (error) {
-    console.log("GOOGLE LOGIN ERROR:", error); // 🔥 DEBUG
+    console.log("GOOGLE LOGIN ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
 router.put(
   "/profile",
   authMiddleware,
   upload.single("resume"),
   async (req, res) => {
     try {
-
       const user = await User.findById(req.user.id);
 
       const updates = { ...req.body };
 
+     
       if (req.file && user.resume_url) {
         const oldPath = path.join("uploads", path.basename(user.resume_url));
         if (fs.existsSync(oldPath)) {
@@ -143,6 +151,7 @@ router.put(
         }
       }
 
+  
       if (req.file) {
         updates.resume_url = `/uploads/${req.file.filename}`;
       }
@@ -158,6 +167,7 @@ router.put(
       res.json(safeUser);
 
     } catch (error) {
+      console.log("UPLOAD ERROR:", error); 
       res.status(500).json({ error: error.message });
     }
   }

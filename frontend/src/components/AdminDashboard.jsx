@@ -41,7 +41,7 @@ export default function AdminDashboard() {
   return (
     <Layout role="admin">
 
-    
+
       <Box mb={4} display="flex" justifyContent="space-between" alignItems="center">
         <Typography variant="h4" fontWeight="bold">
           Admin Dashboard
@@ -120,65 +120,64 @@ export default function AdminDashboard() {
             )}
 
             {applications
-            .filter(a => a.status === "applied").map((a) => (
-              <Box key={a._id} mb={2} p={2} sx={boxStyle}>
+              .filter(a => a.status === "applied").map((a) => (
+                <Box key={a._id} mb={2} p={2} sx={boxStyle}>
 
-                <Typography fontWeight="bold">
-                  {a.student?.name} → {a.company?.name || "N/A"}
-                </Typography>
-
-                <Typography
-                  color={
-                    a.status === "selected"
-                      ? "#16a34a"
-                      : a.status === "rejected"
-                      ? "#dc2626"
-                      : "#ca8a04"
-                  }
-                >
-                  Status: {a.status}
-                </Typography>
-
-            
-                {a.resume ? (
-                  <a
-                    href={`http://localhost:5000${a.resume}`}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <Button size="small" sx={{ mr: 1 }}>
-                      View Resume
-                    </Button>
-                  </a>
-                ) : (
-                  <Typography fontSize={12} color="#6b7280">
-                    No Resume
+                  <Typography fontWeight="bold">
+                    {a.student?.name} → {a.company?.name || "N/A"}
                   </Typography>
-                )}
 
-              
-                <Box mt={1}>
-                  <Button
-                    size="small"
-                    sx={actionBtn}
-                    onClick={() => updateStatus(a._id, "selected")}
+                  <Typography
+                    color={
+                      a.status === "selected"
+                        ? "#16a34a"
+                        : a.status === "rejected"
+                          ? "#dc2626"
+                          : "#ca8a04"
+                    }
                   >
-                    Select
-                  </Button>
+                    Status: {a.status}
+                  </Typography>
 
-                  <Button
-                    size="small"
-                    sx={{ ...actionBtn, ml: 1 }}
-                    onClick={() => updateStatus(a._id, "rejected")}
-                  >
-                    Reject
-                  </Button>
+
+                  {a.resume ? (
+                    <a
+                      href={`https://placement-project-g1kt.onrender.com${a.resume}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <Button size="small" sx={{ mr: 1 }}>
+                        View Resume
+                      </Button>
+                    </a>
+                  ) : (
+                    <Typography fontSize={12} color="#6b7280">
+                      No Resume
+                    </Typography>
+                  )}
+
+                  <Box mt={1}>
+                    <Button
+                      size="small"
+                      sx={actionBtn}
+                      onClick={() => updateStatus(a._id, "selected")}
+                    >
+                      Select
+                    </Button>
+
+                    <Button
+                      size="small"
+                      sx={{ ...actionBtn, ml: 1 }}
+                      onClick={() => updateStatus(a._id, "rejected")}
+                    >
+                      Reject
+                    </Button>
+                  </Box>
+
+                  <Divider sx={{ my: 1 }} />
+
                 </Box>
-
-                <Divider sx={{ my: 1 }} />
-
-              </Box>
-            ))}
+              ))}
 
           </CardContent>
         </Card>
